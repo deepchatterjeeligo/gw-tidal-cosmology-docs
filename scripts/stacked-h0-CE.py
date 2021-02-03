@@ -192,35 +192,6 @@ results_master['prior_wt'] = prior_wt
 relative_pop_wts = results_master.pop_wt/results_master.pop_wt.min()/5
 
 # Stacked H0
-
-
-# In[30]:
-
-
-# stacked_h0 = lambda x: reduce(
-#     mul, [
-#         (prior_wt * k(x))**pop_wt
-#         for k, prior_wt, pop_wt in zip(results_master.hubble_kde.values,
-#                                        results_master.prior_wt.values,
-#                                        relative_pop_wts)
-#     ]
-# )
-# stacked_h0 = lambda x: reduce(
-#     mul, [
-#         k(x)**pop_wt
-#         for k, prior_wt, pop_wt in zip(results_master.hubble_kde.values,
-#                                        results_master.prior_wt.values,
-#                                        relative_pop_wts)
-#     ]
-# )
-# stacked_h0 = lambda x: reduce(
-#     mul, [
-#         k(x)**pop_wt
-#         for k, prior_wt, pop_wt in zip(results_master.reweighted_hubble_kde.values,
-#                                        results_master.prior_wt.values,
-#                                        relative_pop_wts)
-#     ]
-# )
 stacked_h0 = lambda x: reduce(
     mul, [
         (prior_wt * k(x))**pop_wt
@@ -245,7 +216,8 @@ for idx, r in results_master.iterrows():
 
 
 plt.plot(h0_vals, norm_stacked_h0(h0_vals), linewidth=3)
+plt.xlim((20, 200))
 plt.axvline(x=70, c='r')
-plt.xlabel('$H_0$')
+plt.xlabel('$H_0$ (km s$^{-1}/$Mpc)')
 plt.ylabel('$p(H_0)$')
 plt.savefig('../figures/stacked-h0-ce-v1.pdf')
