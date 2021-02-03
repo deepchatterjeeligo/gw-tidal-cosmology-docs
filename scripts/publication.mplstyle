@@ -1,3 +1,9 @@
+font.family        : serif
+font.serif         : Times, Palatino, New Century Schoolbook, Bookman, Computer Modern Roman
+font.sans-serif    : Helvetica, Avant Garde, Computer Modern Sans serif
+font.cursive       : Zapf Chancery
+font.monospace     : Courier, Computer Modern Typewriter
+text.usetex        : true
 figure.figsize : 7.4, 5.8 
 axes.titlesize : 14
 axes.labelsize : 14
