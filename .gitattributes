@@ -1,1 +1,4 @@
 data/O8/** filter=lfs diff=lfs merge=lfs -text
+data/O5/coinc-O5.sqlite filter=lfs diff=lfs merge=lfs -text
+data/O5/dl-iota-kde.pickle-O5 filter=lfs diff=lfs merge=lfs -text
+data/O5/O5-era.psd.xml filter=lfs diff=lfs merge=lfs -text
