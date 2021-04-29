@@ -53,7 +53,7 @@ def wvals(dl,iota):
     
 #Plotting The Stacked Posterior
 weights = np.array([wvals(dlvalsinj[j],iotavalsinj[j]) for j in range(len(dlvalsinj))])
-weights = (30/np.sum(weights))*weights
+weights = (50/np.sum(weights))*weights
 
 weights1 = np.array([dist_population([dlvalsinj[j],iotavalsinj[j]])[0] for j in range(len(dlvalsinj))])
 
@@ -93,5 +93,7 @@ plt.xlabel('$H_0$ (km s$^{-1}/$Mpc)')
 plt.ylabel('$p(H_0)$')
 #ax[1].axvline(x=0.9,c='r')
 #plt.title('50 Events',fontsize=20)
+plt.savefig('/home/abhi/Desktop/Plots/stacked-h0-O8-v1.pdf')
+plt.show()
 plt.savefig('/home/abhi/Desktop/Plots/stacked-h0-O8-v1.pdf')
 plt.show()
