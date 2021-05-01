@@ -13,7 +13,7 @@ import numpy as np
 import pandas as pd
 import scipy as sp
 from scipy.stats import gaussian_kde
-from scipy.integrate import quad
+from scipy.integrate import quad, cumtrapz
 
 import bilby
 
@@ -169,27 +169,29 @@ prior_wt = prior_wts_dist*prior_wts_incl
 prior_wt /= prior_wt.sum()
 results_master['prior_wt'] = prior_wt
 
-# dist_vals = np.linspace(100, 8000, 100)
-# incl_vals = np.linspace(0, np.pi, 20)
+dist_vals = np.linspace(100, 8000, 100)
+incl_vals = np.linspace(0, np.pi, 20)
 
-# X, Y = np.meshgrid(dist_vals, incl_vals)
-# positions = np.vstack([X.ravel(), Y.ravel()])
-# Z = np.reshape(kde(positions).T, X.shape)
+X, Y = np.meshgrid(dist_vals, incl_vals)
+positions = np.vstack([X.ravel(), Y.ravel()])
+Z = np.reshape(kde(positions).T, X.shape)
 
-# plt.figure(figsize=(12, 8))
-# plt.contourf(X, Y, Z, cmap='bone')
-# plt.colorbar()
-# plt.xlabel('Distance')
-# plt.ylabel('Inclination')
-# plt.ylim((0, 1.57))
-# plt.scatter(
-#     results_master.distance, results_master.inclination/180*np.pi,
-#     s=50,
-#     c='r',
-#     #c=results_master.prior_wt, cmap='hot'
-# )
+plt.figure()
+plt.contourf(X, Y, Z, cmap='bone')
+plt.colorbar()
+plt.xlabel(r'Distance (Mpc)')
+plt.ylabel(r'Inclination (Rad.)')
+plt.ylim((0, 1.57))
+plt.scatter(
+    results_master.distance, results_master.inclination/180*np.pi,
+    s=50,
+    c='r',
+)
+plt.savefig('../figures/p-det-heatmap-ce.pdf')
+plt.close()
+#plt.show()
 
-relative_pop_wts = results_master.pop_wt/results_master.pop_wt.min()/5
+relative_pop_wts = 70*(results_master.pop_wt/np.sum(results_master.pop_wt))
 
 # Stacked H0
 stacked_h0 = lambda x: reduce(
@@ -200,9 +202,17 @@ stacked_h0 = lambda x: reduce(
                                        relative_pop_wts)
     ]
 )
-norm = quad(stacked_h0, 0, 500)[0]
+norm = quad(stacked_h0, 40, 100)[0]
 norm_stacked_h0 = lambda x: stacked_h0(x)/norm
 
+h0_vals = np.linspace(50, 90, num=1000)
+p_h0_vals = norm_stacked_h0(h0_vals)
+h0_cdf = cumtrapz(p_h0_vals, h0_vals)
+h0_vals = 0.5*(h0_vals[1:] + h0_vals[:-1])
+five, ninety_five = h0_vals[np.argmax(h0_cdf > 0.05)], h0_vals[np.argmax(h0_cdf > 0.95)]
+print("5 percent/ 95 percent/ confidence interval = {}/{}/{}".format(
+    five, ninety_five, ninety_five - five
+))
 plt.figure()
 h0_vals = np.linspace(20, 150, 150)
 colors = {'15.0': 'y', '20.0':'y', '30.0': 'y', '37.5': 'y', '45.0': 'm', '60.0': 'm', '75.0': 'm'}
@@ -211,13 +221,13 @@ for idx, r in results_master.iterrows():
     plt.plot(h0_vals, r.reweighted_hubble_kde(h0_vals),
              label=f'DL = {r.distance:.1e}; iota = {r.inclination:.1e}',
              color='black',
-             #  color=colors[str(r.inclination)],
              linestyle='dotted')
 
 
-plt.plot(h0_vals, norm_stacked_h0(h0_vals), linewidth=3)
+plt.plot(h0_vals, norm_stacked_h0(h0_vals), linewidth=3, color='C0')
 plt.xlim((20, 150))
 plt.axvline(x=70, c='r')
 plt.xlabel('$H_0$ (km s$^{-1}/$Mpc)')
 plt.ylabel('$p(H_0)$')
-plt.savefig('../figures/stacked-h0-ce-v2.pdf')
+#plt.show()
+plt.savefig('../figures/stacked-h0-ce.pdf')

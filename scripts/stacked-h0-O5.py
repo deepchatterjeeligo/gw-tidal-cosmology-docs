@@ -149,6 +149,28 @@ results_master['reweighted_hubble_kde'] = [
 with open('/home/deep/github/gw-tidal-cosmology-docs/data/O5/dl-iota-kde.pickle-O5', 'rb') as f:
     kde = pickle.load(f)
 
+dist_vals = np.linspace(50, 800, 100)
+incl_vals = np.linspace(0, np.pi, 20)
+
+X, Y = np.meshgrid(dist_vals, incl_vals)
+positions = np.vstack([X.ravel(), Y.ravel()])
+Z = np.reshape(kde(positions).T, X.shape)
+
+plt.figure()
+plt.contourf(X, Y, Z, cmap='bone')
+plt.colorbar()
+plt.xlabel(r'Distance (Mpc)')
+plt.ylabel(r'Inclination (Rad.)')
+plt.ylim((0, 1.57))
+plt.scatter(
+    results_master.distance, results_master.inclination/180*np.pi,
+    s=50,
+    c='r',
+
+)
+plt.savefig('../figures/p-det-heatmap-O5.pdf')
+plt.close()
+
 pop_wts = [kde([r.distance, r.inclination/180*np.pi])[0] for idx, r in results_master.iterrows()]
 
 results_master['pop_wt'] = np.array(pop_wts)
@@ -200,4 +222,4 @@ plt.axvline(x=70, c='r')
 plt.xlabel('$H_0$ (km s$^{-1}/$Mpc)')
 plt.ylabel('$p(H_0)$')
 #plt.show()
-plt.savefig('../figures/stacked-h0-O5-v1.pdf')
+plt.savefig('../figures/stacked-h0-O5.pdf')

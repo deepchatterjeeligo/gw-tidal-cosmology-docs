@@ -74,7 +74,6 @@ y = np.array([stacked(j) for j in x])
 
 norm = sp.integrate.quad(stacked,0,300)[0]
 
-norm1 = np.sum(y)*(x[1]-x[0])
 
 
 
@@ -93,7 +92,5 @@ plt.xlabel('$H_0$ (km s$^{-1}/$Mpc)')
 plt.ylabel('$p(H_0)$')
 #ax[1].axvline(x=0.9,c='r')
 #plt.title('50 Events',fontsize=20)
-plt.savefig('/home/abhi/Desktop/Plots/stacked-h0-O8-v1.pdf')
-plt.show()
-plt.savefig('/home/abhi/Desktop/Plots/stacked-h0-O8-v1.pdf')
+#plt.savefig('/home/abhi/Desktop/Plots/stacked-h0-O8-v1.pdf')
 plt.show()
