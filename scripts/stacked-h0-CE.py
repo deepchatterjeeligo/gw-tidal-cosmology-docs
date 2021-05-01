@@ -191,7 +191,8 @@ plt.savefig('../figures/p-det-heatmap-ce.pdf')
 plt.close()
 #plt.show()
 
-relative_pop_wts = 70*(results_master.pop_wt/np.sum(results_master.pop_wt))
+num_events = 70
+relative_pop_wts = num_events*(results_master.pop_wt/np.sum(results_master.pop_wt))
 
 # Stacked H0
 stacked_h0 = lambda x: reduce(
@@ -210,9 +211,11 @@ p_h0_vals = norm_stacked_h0(h0_vals)
 h0_cdf = cumtrapz(p_h0_vals, h0_vals)
 h0_vals = 0.5*(h0_vals[1:] + h0_vals[:-1])
 five, ninety_five = h0_vals[np.argmax(h0_cdf > 0.05)], h0_vals[np.argmax(h0_cdf > 0.95)]
-print("5 percent/ 95 percent/ confidence interval = {}/{}/{}".format(
+print("5 percent/ 95 percent/ confidence interval = {:.2f}/{:.2f}/{:.2f}".format(
     five, ninety_five, ninety_five - five
 ))
+print(f"With 1/sqrt(N) scaling, width = {(ninety_five - five)*(num_events/1000)**0.5:.2f}")
+
 plt.figure()
 h0_vals = np.linspace(20, 150, 150)
 colors = {'15.0': 'y', '20.0':'y', '30.0': 'y', '37.5': 'y', '45.0': 'm', '60.0': 'm', '75.0': 'm'}
