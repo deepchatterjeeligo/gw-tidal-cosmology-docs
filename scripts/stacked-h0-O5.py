@@ -203,8 +203,20 @@ stacked_h0 = lambda x: reduce(
                                        relative_pop_wts)
     ]
 )
-norm = quad(stacked_h0, 0, 300)[0]
+
+norm = quad(stacked_h0, 20, 150)[0]
 norm_stacked_h0 = lambda x: stacked_h0(x)/norm
+
+h0_vals = np.linspace(10, 150, num=1000)
+p_h0_vals = norm_stacked_h0(h0_vals)
+h0_cdf = sp.integrate.cumtrapz(p_h0_vals, h0_vals)
+h0_vals = 0.5*(h0_vals[1:] + h0_vals[:-1])
+plt.plot(h0_vals, h0_cdf)
+plt.show()
+five, ninety_five = h0_vals[np.argmax(h0_cdf > 0.05)], h0_vals[np.argmax(h0_cdf > 0.95)]
+print("5 percent/ 95 percent/ confidence interval = {:.2f}/{:.2f}/{:.2f}".format(
+    five, ninety_five, ninety_five - five
+))
 
 plt.figure()
 h0_vals = np.linspace(20, 150, 150)
