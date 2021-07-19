@@ -185,14 +185,14 @@ Z_comoving = np.reshape(kde_comoving(positions).T, X.shape)
 plt.figure(figsize=(8, 5))
 plt.contourf(
     X, Y, Z_md, cmap='bone', linestyles='solid',
-    levels=(8e-6, 1e-5, 2e-5, 3e-5, 5e-5, 8e-5, 1e-4, 2e-4)
+    levels=(1e-7, 1e-6, 4e-6, 1e-5, 2e-5, 3e-5, 5e-5, 8e-5, 1e-4, 2e-4)
 )
 c_md = plt.colorbar(orientation='vertical')
 plt.contour(X, Y, Z_comoving, cmap='hot_r', linestyles='solid', linewidths=2,
-            levels=(8e-6, 1e-5, 2e-5, 3e-5, 5e-5, 8e-5, 1e-4, 2e-4))
+            levels=(1e-7, 1e-6, 4e-6, 1e-5, 2e-5, 3e-5, 5e-5, 8e-5, 1e-4, 2e-4))
 c_comoving = plt.colorbar(orientation='vertical')
-c_md.set_label("M.D.")
-c_comoving.set_label("Comov.")
+c_md.set_label("S.F.H.")
+c_comoving.set_label("Unif. Com.")
 plt.xlabel(r'Distance (Mpc)')
 plt.ylabel(r'Inclination (Rad.)')
 plt.ylim((0, 1.57))
@@ -265,9 +265,9 @@ for idx, r in results_master.iterrows():
              linestyle='dotted')
 
 plt.plot(h0_vals_md, norm_stacked_h0_md(h0_vals_md), linewidth=3,
-         color='C0', label='Madau-Dickinson')
+         color='C0', label='S.F.H.')
 plt.plot(h0_vals_comoving, norm_stacked_h0_comoving(h0_vals_comoving),
-         linewidth=2, linestyle='dashed', color='C1', label='Comoving')
+         linewidth=2, linestyle='dashed', color='C1', label='Unif. Com.')
 plt.legend()
 plt.xlim((20, 150))
 plt.axvline(x=70, c='r')
